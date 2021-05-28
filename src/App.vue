@@ -1,14 +1,20 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <div id="app">
+        <div id="nav">
+          <div class="login">
+            <router-link to="/login"></router-link>     
+          </div>
+        </div>
+        <router-view />
     </div>
-    <router-view/>
-  </div>
 </template>
 
 <style>
+
+.login {
+  bottom: unset;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -17,10 +23,9 @@
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+#nav a:hover {
+  color: bisque;
 }
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
