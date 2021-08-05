@@ -3,42 +3,67 @@
   <v-layout align-start>
     <v-flex>
       <v-toolbar flat color="white">
-        <v-toolbar-title>Categorías</v-toolbar-title>
+        <v-toolbar-title>Clientes</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
-        <button @click="crearPDF"><v-icon> mdi-printer-check</v-icon></button>
         <v-spacer></v-spacer>
         <v-text-field
           class="text-xs-center"
+          v-model="search"
           append-icon="mdi-magnify"
           label="Búsqueda"
-          v-model="search"
           single-line
+          hide-details
         ></v-text-field>
         <v-spacer></v-spacer>
-        <v-dialog 
-        v-model="dialog" 
-        max-width="500px">
-          <template v-slot:activator="{on}">
-             <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo</v-btn>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo</v-btn>
           </template>
           <v-card>
             <v-card-title>
-              <span class="headline">{{tituForm}}</span>
+              <span class="headline">{{ tituForm }}</span>
             </v-card-title>
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex xs12 sm12 md12>
-                    <v-text-field
-                      v-model="nombre"
-                      label="Nombre"
-                    ></v-text-field>
+                    <v-text-field 
+                    v-model="nombre"
+                     label="Nombre">
+                    </v-text-field>
                   </v-flex>
-                  <v-flex xs12 sm12 md12>
+                  <v-flex xs12 sm6 md6>
+                    <v-select
+                      v-model="documento"
+                      :items="documentos"
+                      label="Tipo Documento"
+                    >
+                    </v-select>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6>
                     <v-text-field
-                      v-model="descripcion"
-                      label="Descripción"
-                    ></v-text-field>
+                      v-model="Iddocumento"
+                      label="Número Documento"
+                    >
+                    </v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6>
+                    <v-text-field
+                     v-model="direccion"
+                      label="Dirección">
+                    </v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6>
+                    <v-text-field
+                     v-model="telefono" 
+                     label="Teléfono">
+                    </v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6>
+                    <v-text-field 
+                    v-model="email"
+                     label="Email"> 
+                     </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm12 md12 v-show="valida">
                     <div
@@ -53,7 +78,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="cerrar">Cancelar</v-btn>
+              <v-btn color="blue darken-1" flat @click="close">Cancelar</v-btn>
               <v-btn color="blue darken-1" flat @click="guardar">Guardar</v-btn>
             </v-card-actions>
           </v-card>
@@ -61,10 +86,10 @@
         <v-dialog v-model="Modal" max-width="290">
           <v-card>
             <v-card-title class="headline" v-if="Accion == 1">
-              Activar
+              Activar Item
             </v-card-title>
             <v-card-title class="headline" v-if="Accion == 2">
-              Desactivar
+              Desactivar Item
             </v-card-title>
             <v-card-text>
               Estás a punto de <span v-if="Accion == 1">activar </span>
@@ -75,7 +100,7 @@
               <v-spacer></v-spacer>
               <v-btn
                 @click="actiDesaCerrar()"
-                color="primary"
+                color="green darken-1"
                 flat="flat"
               >
                 Cancelar
@@ -83,7 +108,7 @@
               <v-btn
                 v-if="Accion == 1"
                 @click="activar()"
-                color="primary"
+                color="orange darken-4"
                 flat="flat"
               >
                 Activar
@@ -91,7 +116,7 @@
               <v-btn
                 v-if="Accion == 2"
                 @click="desactivar()"
-                color="primary"
+                color="orange darken-4"
                 flat="flat"
               >
                 Desactivar
@@ -99,51 +124,24 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-<!-- ELIMINAR -->
-        <v-dialog v-model="ModalEliminar" max-width="290">
-          <v-card>
-           <v-card-title class="headline" >
-              Eliminar Item
-            </v-card-title>
-             <v-card-text>
-              Estás a punto de eliminar el item <v-spacer></v-spacer> 
-               {{Nombre}} 
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                @click="DeleteCerrar()"
-                color="primary"
-                flat="flat"
-              >
-                Cancelar
-              </v-btn>
-            </v-card-actions>
-            </v-card>
-        </v-dialog>
-
       </v-toolbar>
-    
       <v-data-table
         :headers="headers"
-        :items="categorias"
+        :items="personas"
         :search="search"
         class="elevation-1"
       >
-        <template v-slot:[`item.opciones`]="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">
+        <template v-slot:[`item.opciones`]="{ item,index}">
+          <v-icon small class="mr-2" @click="editItem(item,index)">
             mdi-pencil
           </v-icon>
           <template v-if="item.estado">
-            <v-icon 
-            small 
-            @click="actiDesaVer(2, item)">
+            <v-icon small @click="actiDesaVer(2, item)">
               mdi-server-network
             </v-icon>
           </template>
           <template v-else>
-            <v-icon small
-             @click="actiDesaVer(1, item)">
+            <v-icon small @click="actiDesaVer(1, item)">
               mdi-server-off
             </v-icon>
           </template>
@@ -159,101 +157,90 @@
         <template v-slot:no-data>
           <v-btn color="primary" @click="listar()">Actualizar</v-btn>
         </template>
-      </v-data-table> 
+      </v-data-table>
     </v-flex>
   </v-layout>
   </nav>
 </template>
-
-
 <script>
 import axios from "axios";
-import 'jspdf-autotable'
-import jsPDF from "jspdf";
+import {mapActions, mapGetters} from "vuex"
 export default {
   data() {
     return {
-      search: "",
-      categorias: [],
-      categoria: "holaa",
       dialog: false,
+      search: "",
       headers: [
         { text: "Nombre", value: "nombre", sortable: true },
-        { text: "Descripción", value: "descripcion", sortable: false },
+        { text: "Tipo Persona", value: "tipoPersona", sortable: true },
+        { text: "Tipo Documento", value: "documento", sortable: true },
+        { text: "Número Documento", value: "Iddocumento", sortable: true },
+        { text: "Dirección", value: "direccion", sortable: false },
+        { text: "Teléfono", value: "telefono", sortable: false },
+        { text: "Email", value: "email", sortable: false },
         { text: "Estado", value: "estado", sortable: false },
         { text: "Opciones", value: "opciones", sortable: false },
       ],
       editedIndex: -1,
+      index:"",
       id: "",
       nombre: "",
-      descripcion: "",
-// Validaciones 
+      tipoPersona: "Cliente",
+      documento: "",
+      documentos: ["CC", "NIT", "PASAPORTE", "CE"],
+      Iddocumento: "",
+      direccion: "",
+      telefono: "",
+      email: "",
       valida: 0,
       validaMensaje: [],
       Modal: 0,
-      ModalEliminar: 0,
       Accion: 0,
       Nombre: "",
       Id: "",
     };
   },
   computed: {
+    ...mapGetters({
+      personas: "allCliente"
+    }),
     tituForm() {
       return this.editedIndex === -1 ? "Nuevo registro" : "Editar registro";
     },
   },
   watch: {
     dialog(val) {
-      val || this.cerrar();
+      val || this.close();
     },
   },
   created() {
-    this.listar();
-  },
+    this.getPersona();
+  }, 
   methods: {
+    ...mapActions([
+      "getPersona",
+      "newPersona",
+      "updatePersona"
+    ]),
     listar() {
       let me = this;
-      let header={headers:{"token":this.$store.state.token}}
+      let header = { headers: {"token": this.$store.state.token}};
       axios
-        .get("categoria",header)
+        .get("persona", header)
         .then(function (response) {
-          me.categorias = response.data.categoria;
+          me.personas = response.data.persona;
         })
         .catch(function (error) {
           console.log(error);
         });
     },
-
-    crearPDF() {
-      var columns = [
-        { title: "Nombre", dataKey: "nombre" },
-        { title: "Descripcion", dataKey: "descripcion" },
-        { title: "Estado", dataKey: "estado" },
-      ];
-      var rows = [];
-        console.log(this.categorias)
-      this.categorias.map(function (x) {
-        rows.push({
-          nombre: x.nombre,
-          descripcion: x.descripcion,
-          estado: x.estado,
-        });
-      });
-      var doc = new jsPDF("p","pt");
-      doc.autoTable(columns, rows, {
-        margin: { top: 60 },
-        addPageContent: function () {
-          doc.text("Lista de Categorias", 40, 30);
-        },
-      });
-
-      doc.save("Articulos.pdf");
-    },
-
-    limpiar(){
-      this.id = "";
+    limpiar() {
+      this._id = "";
       this.nombre = "";
-      this.descripcion = "";
+      this.Iddocumento = "";
+      this.direccion = "";
+      this.telefono = "";
+      this.email = "";
       this.valida = 0;
       this.validaMensaje = [];
       this.editedIndex = -1;
@@ -263,12 +250,27 @@ export default {
       this.validaMensaje = [];
       if (this.nombre.length < 1 || this.nombre.length > 50) {
         this.validaMensaje.push(
-          "El nombre de la categoría debe tener entre 1-50 caracteres."
+          "El nombre de la persona debe tener entre 1-50 caracteres."
         );
       }
-      if (this.descripcion.length > 255) {
+      if (this.Iddocumento.length > 20) {
         this.validaMensaje.push(
-          "La descripción de la categorí­a no debe tener más de 255 caracteres."
+          "El documento no debe tener mas de 20 caracteres."
+        );
+      }
+      if (this.direccion.length > 70) {
+        this.validaMensaje.push(
+          "La direccion no debe tener mas de 70 caracteres."
+        );
+      }
+      if (this.telefono.length > 20) {
+        this.validaMensaje.push(
+          "El telefono no debe tener mas de 20 caracteres."
+        );
+      }
+      if (this.nombre.length > 50) {
+        this.validaMensaje.push(
+          "El email del usuario debe tener menos de 50 caracteres."
         );
       }
       if (this.validaMensaje.length) {
@@ -277,51 +279,53 @@ export default {
       return this.valida;
     },
     guardar() {
-      let me = this;
       if (this.validar()) {
         return;
       }
-      if (this.editedIndex > -1) {      
-        let header={headers:{"token":this.$store.state.token}}  
-        axios
-          .put(`categoria/${me._id}`, {
-            nombre: me.nombre,
-            descripcion: me.descripcion,
-          },header)
-          .then(function () {
-            me.limpiar();
-            me.cerrar();
-            me.listar();
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      } else {
-        let header={headers:{"token":this.$store.state.token}}  
-
-        // CODIGO GUARDAR
-        axios
-          .post("categoria", {
+      if (this.editedIndex > -1) {
+        this.updatePersona({
+          persona: {
+            id:this.id,
             nombre: this.nombre,
-            descripcion: this.descripcion,
-          },header)
-          .then(function (response) {
-            me.limpiar(response);
-            me.cerrar();
-            me.listar();
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+            documento: this.documento,
+            Iddocumento: this.Iddocumento,
+            direccion: this.direccion,
+            telefono: this.telefono,
+            email: this.email,
+            
+          },
+          index:this.index,
+        })
+      } else {
+        //Codigo para guardar
+        this.newPersona({
+          tipoPersona: this.tipoPersona,
+          nombre: this.nombre,
+          documento: this.documento,
+          Iddocumento: this.Iddocumento,
+          direccion: this.direccion,
+          telefono: this.telefono,
+          email: this.email,
+        })
       }
+      this.close()
     },
-    editItem(item) {
-      this._id = item._id;
+    editItem(item,index) {
+      this.id = item._id;
+      this.rol = item.rol;
       this.nombre = item.nombre;
-      this.descripcion = item.descripcion;
+      this.documento = item.documento;
+      this.Iddocumento = item.Iddocumento;
+      this.direccion = item.direccion;
+      this.telefono = item.telefono;
+      this.email = item.email;
+      this.password = item.password;
       this.dialog = true;
       this.editedIndex = 1;
+      this.index = index;
+      
     },
+    
     actiDesaVer(accion, item) {
       this.Modal = 1;
       this.Nombre = item.nombre;
@@ -337,14 +341,11 @@ export default {
     actiDesaCerrar() {
       this.Modal = 0;
     },
-    DeleteCerrar() {
-      this.ModalEliminar = 0;
-    },
     activar() {
       let me = this;
-      let header={headers:{"token":this.$store.state.token}}  
+      let header = { headers: { "token": this.$store.state.token } };
       axios
-        .put(`categoria/activar/${me.Id}`,{},header)
+        .put(`persona/activar/${this.Id}`, { }, header)
         .then(function () {
           me.Modal = 0;
           me.Accion = 0;
@@ -358,9 +359,9 @@ export default {
     },
     desactivar() {
       let me = this;
-      let header={headers:{"token":this.$store.state.token}}  
+     let header = { headers: { "token": this.$store.state.token } };
       axios
-        .put(`categoria/desactivar/${me.Id}`,{},header)
+        .put(`persona/desactivar/${this.Id}`, { }, header)
         .then(function () {
           me.Modal = 0;
           me.Accion = 0;
@@ -372,26 +373,10 @@ export default {
           console.log(error);
         });
     },
-    cerrar() {
+    close() {
       this.dialog = false;
-      this.limpiar;
+      this.limpiar();
     },
-    deleteItem( item){
-      this.ModalEliminar = 1;
-      this.Nombre = item.nombre;
-      this.Id = item._id;
-    },
-    eliminar(){
-      var me ={
-        "id": this.id,
-        "token": this.$store.state.token
-      };
-      axios.delete(`categoria/${me._id}`,this.headers)
-      .then(datos=>{
-        console.log(datos);
-      })
-      } 
-    
   },
 };
 </script>

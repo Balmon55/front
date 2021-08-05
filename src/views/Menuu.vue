@@ -1,7 +1,5 @@
 <template>
   <div class="menuu">
-    <div>
-    </div>
     <Menu/>
   </div>
 </template>
@@ -13,7 +11,7 @@ import Menu from '@/components/Menu.vue'
 export default {
   name: 'Menuu',
   components: {
-    Menu
+    Menu,
   }
 }
 </script>

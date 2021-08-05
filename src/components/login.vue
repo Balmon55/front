@@ -1,20 +1,5 @@
 <template>
   <div class="fondo">
-    <header>
-      <div id="iconosalir">
-        <b-button>
-          <b-icon icon="grid3x3-gap-fill"></b-icon>
-        </b-button>
-      </div>
-      <div id="encabezado">
-        <div class="h1 mb-0 text-success">
-          <b-button id="sistem"> 
-            <b-icon icon="list"></b-icon>
-          </b-button> 
-          Sistema
-        </div>
-      </div>
-    </header>
     <div class="inicio">
       <form action class="form">
         <label class="form-label" for="#email">Email:</label>
@@ -35,15 +20,9 @@
           required
           placeholder="Password"
         />
-        <!-- boton -->
-        <div @click="inicioSesion" class="form-submit" value="Login">login</div>
+        <div @click.enter="inicioSesion" class="form-submit" value="login">Login</div>
       </form>
     </div>
-     <footer>
-        <div class="Piepagina">
-          <h6>ADSI Centro Agroturistico ©2021</h6>
-        </div>
-      </footer>
   </div>
 </template>
 
@@ -68,34 +47,35 @@ export default {
         })
         .then(function(response) {
           me.$store.dispatch("setToken", response.data);
-          me.$router.push("/menu");
+          me.$store.dispatch("setRol", response.data.usuario.rol);
+          me.$router.push("/venta");
+          console.log(response.data)
         })
 
         .catch(function({response}) {
-          console.log(response);
+          console.log(response.data.msg);
+          alert(response.data.msg);
         });
+        
     },
+    
   },
 };
 </script>
 
 <style>
-
-.fondo {
-  background:#188669;
-  width: 100%;
+ 
+.fondo{
+  background: #0b9185;
+  height: 600px;
 }
-
 .inicio {
   padding: 0.01rem;
 }
 #iconosalir {
   float: right;
 }
-#encabezado {
-  float: left;
-  
-}
+
 #sistem{
   color: rgb(8, 8, 8);
 }
@@ -107,11 +87,11 @@ header {
   background: rgba(1, 20, 34, 0.9);
   box-shadow: 0 0.1px 7px 2px rgba(0, 0, 0, 0.3);
   width: 100%;
-  height: 90px;
-  padding: 20px;
+  height: 89px;
+  padding: 24px;
 }
 .form {
-  margin-left: 470px;
+  margin-left: 540px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -122,8 +102,8 @@ header {
   border-radius: 2px;
   padding: 28px;
   box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
-  margin-top: 6%;
-  margin-bottom: 6.5%;
+  margin-top: 8%;
+  margin-bottom: 6.7%;
 }
 .form-label {
   margin-top: 2rem;
@@ -159,15 +139,5 @@ header {
 }
 .form-submit:hover {
   color: black;
-}
-.Piepagina {
-  background: rgb(2, 3, 24);
-  box-shadow: 0 0.1px 7px 1px rgba(0, 0, 0, 0.3);
-  height: 54px;
-}
-h6 {
-  padding:17px;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  color: #17d6a3;
 }
 </style>
