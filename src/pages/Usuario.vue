@@ -294,7 +294,6 @@ export default {
       if (this.validar()) {
         return;
       }
-      console.log("control");
       if (this.editedIndex > -1) {
         console.log("control");
         axios

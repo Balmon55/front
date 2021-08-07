@@ -45,6 +45,7 @@ export default new Vuex.Store({
         });
     },
     newPersona({commit,state}, persona){
+      console.log('Entrando al post')
       let header = { headers: { "token": state.token } };
       axios
         .post("persona",            {
@@ -57,9 +58,11 @@ export default new Vuex.Store({
             email: persona.email,
           },header)
         .then(function (response) {
+          console.log('Entrando al then')
           const updatePersonas = state.persona
           updatePersonas.push(response.data.persona)
           commit("setPersona", updatePersonas)
+          
         })
         .catch(function (error) {
           console.log(error);
@@ -75,12 +78,12 @@ export default new Vuex.Store({
             direccion: persona.direccion,
             telefono: persona.telefono,
             email: persona.email,
-          
+            
           },header)
         .then(function (response) {
           const updatePersonas = state.persona
-          const newPersona = {
-            ...response.data.persona, 
+          const Persona = {
+            ...response.data.persona,
             nombre: persona.nombre,
             documento: persona.documento,
             Iddocumento: persona.Iddocumento,
@@ -88,7 +91,7 @@ export default new Vuex.Store({
             telefono: persona.telefono,
             email: persona.email,
           }
-          updatePersonas.splice(index,1, newPersona)
+          updatePersonas.splice(index,2,Persona)
           commit("setPersona", updatePersonas)
         })
         .catch(function (error) {

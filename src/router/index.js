@@ -10,7 +10,6 @@ import Cliente from '../pages/Cliente.vue';
 import Proveedor from '../pages/Proveedor.vue';
 import Usuario from '../pages/Usuario.vue'
 import Ventas from '../pages/Ventas.vue';
-import Prueba from '../pages/Prueba.vue'
 import store from '../store';
 
 Vue.use(VueRouter);
@@ -20,11 +19,6 @@ const routes = [
     path: "/login",
     name: "Inicio",
     component: Inicio,
-  },
-  {
-    path: "/prueba",
-    name: "Prueba",
-    component: Prueba,
   },
   {
     path: "/Minicio",

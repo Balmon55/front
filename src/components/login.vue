@@ -20,7 +20,14 @@
           required
           placeholder="Password"
         />
-        <div @click.enter="inicioSesion" class="form-submit" value="login">Login</div>
+        <v-btn
+         @click="inicioSesion"
+          class="btn-2" 
+          value="login"
+          color="#0b9185"
+          >
+          Login
+          </v-btn>
       </form>
     </div>
   </div>
@@ -66,7 +73,7 @@ export default {
 <style>
  
 .fondo{
-  background: #0b9185;
+  background: #90e9e1;
   height: 600px;
 }
 .inicio {
@@ -126,18 +133,5 @@ header {
   margin-bottom: 18px;
 }
 
-.form-submit {
-  background: #1ab188;
-  border: 5px;
-  color: white;
-  margin-top: 1rem;
-  padding: 8px 0;
-  background: #0b9185;
-  text-anchor: initial;
-  font-size: 20px;
-  width: 100%;
-}
-.form-submit:hover {
-  color: black;
-}
+
 </style>

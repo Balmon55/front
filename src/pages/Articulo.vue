@@ -242,24 +242,31 @@ export default {
     // CREAR PDF 
     crearPDF() {
       var columns = [
-        { title: "Nombre", dataKey: "nombre" },
-        { title: "Descripcion", dataKey: "descripcion" },
-        { title: "Estado", dataKey: "estado" },
+        {  title: "Nombre", dataKey:"nombre"},
+        {  title: "Codigo", dataKey:"codigo"},
+        {  title: "Categoria", dataKey:"categoria", },
+        {  title: "Descripción", dataKey:"descripcion"},
+        {  title: "Stock", dataKey:"stock"},
+        {  title: "Precio Venta", dataKey:"precioventa"},
+        
       ];
       var rows = [];
         console.log(this.articulos)
       this.articulos.map(function (x) {
         rows.push({
           nombre: x.nombre,
+          codigo: x.codigo,
           descripcion: x.descripcion,
-          estado: x.estado,
-        });
+          precioventa: x.precioventa,
+          stock: x.stock,
+          categoria: x.categoria.nombre,
+        }); 
       });
       var doc = new jsPDF("p","pt");
       doc.autoTable(columns, rows, {
         margin: { top: 60 },
         addPageContent: function () {
-          doc.text("Lista de Categorias", 40, 30);
+          doc.text("Lista de Articulos", 40, 30);
         },
       });
 
@@ -368,9 +375,9 @@ export default {
             },
             header
           )
-          .then(function (response) {
+          .then(function () {
             me.listar();
-            me.limpiar(response);
+            me.limpiar();
             me.cerrar();
             
           })

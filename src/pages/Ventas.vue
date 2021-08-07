@@ -1,9 +1,11 @@
 <template>
+<nav class="container">
   <v-layout align-start>
     <v-flex>
       <v-toolbar flat color="white">
         <v-toolbar-title>Ventas</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
+        <button @click="crearPDF"><v-icon> mdi-printer-check</v-icon></button>
         <v-spacer></v-spacer>
         <v-text-field
           v-if="verNuevo == 0"
@@ -190,7 +192,8 @@
             <v-select  
             :items="personas" 
             v-model="persona"
-             label="Cliente">
+             label="Cliente"
+             >
             </v-select>
 
           </v-flex>
@@ -315,9 +318,12 @@
       </v-container>
     </v-flex>
   </v-layout>
+  </nav>
 </template>
 <script>
 import axios from "axios";
+import jsPDF from "jspdf";
+import 'jspdf-autotable'
 export default {
   data() {
     return {
@@ -340,7 +346,7 @@ export default {
       persona: "",
       personas: [],
       tipoComprobante: "",
-      comprobantes: ["NOTA DEBITO", "FACTURA", "NOTA CREDITO","jhasjkas"],
+      comprobantes: ["NOTA DEBITO", "FACTURA", "NOTA CREDITO"],
       serieComprobante: "",
       numComprobante: "",
       impuesto: 0.19,
@@ -403,6 +409,40 @@ export default {
     this.selectPersona();
   },
   methods: {
+     crearPDF() {
+      var columns = [
+        { title: "Usuario", dataKey:"usuario",  },
+        { title: "Persona", dataKey: "persona",  },
+        { title: "Tipo Comprobante", dataKey: "tipoComprobante"},
+        {title: "Serie comprobante", dataKey: "serieComprobante"},
+        {title: "Número comprobante",dataKey: "numComprobante"},
+        {title: "Impuesto", dataKey: "impuesto" },
+        { title:"Total", dataKey: "total" },
+        
+      ];
+      var rows = [];
+      this.ventas.map(function (x) {
+        rows.push({
+        usuario: x.usuario,
+        persona: x.persona,
+        tipoComprobante:x.tipoComprobante,
+        serieComprobante: x.serieComprobante,
+        numComprobante:x.numComprobante,
+        impuesto:x.impuesto,
+        total:x.total,
+        }); 
+      });
+      var doc = new jsPDF("p","pt");
+      doc.autoTable(columns, rows, {
+        margin: { top: 60 },
+        addPageContent: function () {
+          doc.text("Lista de Ventas", 40, 30);
+        },
+      });
+
+      doc.save("Ventas.pdf");
+    },
+
     selectPersona() {
       let me = this;
       let personaArray = [];

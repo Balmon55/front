@@ -100,7 +100,7 @@
               <v-spacer></v-spacer>
               <v-btn
                 @click="actiDesaCerrar()"
-                color="green darken-1"
+                color="primary"
                 flat="flat"
               >
                 Cancelar
@@ -108,7 +108,7 @@
               <v-btn
                 v-if="Accion == 1"
                 @click="activar()"
-                color="orange darken-4"
+                color="primary"
                 flat="flat"
               >
                 Activar
@@ -116,7 +116,7 @@
               <v-btn
                 v-if="Accion == 2"
                 @click="desactivar()"
-                color="orange darken-4"
+                color="primary"
                 flat="flat"
               >
                 Desactivar
@@ -258,21 +258,6 @@ export default {
           "El documento no debe tener mas de 20 caracteres."
         );
       }
-      if (this.direccion.length > 70) {
-        this.validaMensaje.push(
-          "La direccion no debe tener mas de 70 caracteres."
-        );
-      }
-      if (this.telefono.length > 20) {
-        this.validaMensaje.push(
-          "El telefono no debe tener mas de 20 caracteres."
-        );
-      }
-      if (this.nombre.length > 50) {
-        this.validaMensaje.push(
-          "El email del usuario debe tener menos de 50 caracteres."
-        );
-      }
       if (this.validaMensaje.length) {
         this.valida = 1;
       }
@@ -298,6 +283,7 @@ export default {
         })
       } else {
         //Codigo para guardar
+        console.log('Entrando al newPerson')
         this.newPersona({
           tipoPersona: this.tipoPersona,
           nombre: this.nombre,

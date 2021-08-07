@@ -247,7 +247,7 @@ export default {
         },
       });
 
-      doc.save("Articulos.pdf");
+      doc.save("Categoria.pdf");
     },
 
     limpiar(){
@@ -278,11 +278,12 @@ export default {
     },
     guardar() {
       let me = this;
+      let header={headers:{"token":this.$store.state.token}} 
       if (this.validar()) {
         return;
       }
       if (this.editedIndex > -1) {      
-        let header={headers:{"token":this.$store.state.token}}  
+         
         axios
           .put(`categoria/${me._id}`, {
             nombre: me.nombre,
@@ -305,8 +306,8 @@ export default {
             nombre: this.nombre,
             descripcion: this.descripcion,
           },header)
-          .then(function (response) {
-            me.limpiar(response);
+          .then(function () {
+            me.limpiar();
             me.cerrar();
             me.listar();
           })

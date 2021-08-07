@@ -7,7 +7,10 @@
             this.$store.state.rol == 'almacenista'
         ">
       <div id="iconsalir" class="h2 text-success" >
-        <b-button @click="salir()" pill variant="outline-secondary" >
+        <b-button 
+        @click="salir()" 
+        pill 
+        variant="outline-secondary" >
           <b-icon 
             variant="primary"
             icon="box-arrow-in-right"
@@ -115,7 +118,7 @@
                 <ul>
                   <li id="submenu">
                     <b-dropdown-item-button>
-                      <router-link to="/prueba" tag="button"
+                      <router-link to="" tag="button"
                         >Consulta Compras</router-link
                       >
                     </b-dropdown-item-button>
@@ -145,10 +148,11 @@ export default {
   },
   methods: {
     salir(){
-      this.$store.dispatch("setToken", null);
+      this.$store.dispatch("setToken","");
       this.$store.dispatch("setRol","");
-      this.push("/login"); 
-    },
+      this.$router.push("/login");
+
+    },  
   },
   props: {},
 };
