@@ -15,7 +15,7 @@ axios.defaults.baseURL = "https://back-end1234.herokuapp.com/api";
 // axios.defaults.baseURL = "http://localhost:3000/api/";
 Vue.config.productionTip = false;
 
-new Vue({
+new Vue({ 
   router,
   store,
   vuetify,
