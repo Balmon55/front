@@ -11,8 +11,8 @@ import vuetify from './plugins/vuetify'
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
-// axios.defaults.baseURL = "https://back-end1234.herokuapp.com/api";  
-axios.defaults.baseURL = "http://localhost:3000/api/";
+axios.defaults.baseURL = "https://back-end1234.herokuapp.com/api";  
+// axios.defaults.baseURL = "http://localhost:3000/api/";
 Vue.config.productionTip = false;
 
 new Vue({
