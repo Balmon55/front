@@ -45,8 +45,8 @@ export default new Vuex.Store({
         });
     },
     newPersona({commit,state}, persona){
-      console.log('Entrando al post')
-      let header = { headers: { "token": state.token } };
+      console.log('Entrando al post');
+      let header = { headers: {"token": state.token}};
       axios
         .post("persona",            {
             tipoPersona: persona.tipoPersona,
@@ -56,7 +56,8 @@ export default new Vuex.Store({
             direccion: persona.direccion,
             telefono: persona.telefono,
             email: persona.email,
-          },header)
+          }, header)
+          console.log('saliendo del post en la puerta del then')
         .then(function (response) {
           console.log('Entrando al then')
           const updatePersonas = state.persona

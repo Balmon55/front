@@ -55,7 +55,7 @@ export default {
         .then(function(response) {
           me.$store.dispatch("setToken", response.data);
           me.$store.dispatch("setRol", response.data.usuario.rol);
-          me.$router.push("/venta");
+          me.$router.push("/Minicio");
           console.log(response.data)
         })
 
